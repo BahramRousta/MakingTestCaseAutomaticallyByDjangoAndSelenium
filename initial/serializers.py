@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from initial.models import Driver, Action, TestStep
+from initial.models import Driver, Action, TestStep, TestCase
 
 
 class DriverSerializer(serializers.ModelSerializer):
@@ -41,19 +41,26 @@ class ActionSerializer(serializers.Serializer):
 
 class TestStepSerializer(serializers.ModelSerializer):
     action = ActionSerializer()
-    driver_name = serializers.CharField(max_length=25, required=False)
 
     class Meta:
         model = TestStep
 
-        fields = ["name", "driver_name", "action"]
+        fields = ["name", "action"]
+
+
+class TestCaseSerializer(serializers.ModelSerializer):
+    test_steps = serializers.ListField(
+        child=TestStepSerializer()
+    )
+
+    class Meta:
+        model = TestCase
+        fields = ['title', 'test_steps']
 
 
 class RunSerializer(serializers.Serializer):
     """
-    Serialize TestCase.
+        Serialize TestCase.
     """
 
-    test_step = serializers.ListField(
-        child=TestStepSerializer()
-    )
+    test_case = TestCaseSerializer()

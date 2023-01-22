@@ -29,7 +29,7 @@ class SetUpMain:
 
             if key == "open_browser":
                 self.dr = get_driver(PARAMS[key])
-
+                
             if key == "path":
                 self.dr.get(PARAMS[key])
                 continue

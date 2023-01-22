@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import RunSerializer, DriverSerializer
 from .utils import SetUpMain
-from .models import Driver, TestStep
+from .models import Driver
 
 
 class AddDriverAPIView(APIView):
@@ -26,17 +26,19 @@ class AddDriverAPIView(APIView):
 class RunCheckAPIView(APIView):
     serializer_class = RunSerializer
     set_up = SetUpMain()
+
     def post(self, request):
+
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
 
             for key, value in data.items():
-
-                for index in value:
-
-                    resultDictionary = dict((x, y) for x, y in index['action'].items())
-                    self.set_up.main(**resultDictionary)
+                for index, sub_value in value.items():
+                    if type(sub_value) == list:
+                        for i in sub_value:
+                            resultDictionary = dict((x, y) for x, y in i['action'].items())
+                            self.set_up.main(**resultDictionary)
 
             return Response(status=200)
         else:
