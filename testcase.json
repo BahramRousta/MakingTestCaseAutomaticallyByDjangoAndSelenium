@@ -1,0 +1,38 @@
+{
+    "test_case": {
+                    "title": "farzan",
+                    "test_steps": [
+                                    {
+                                        "name": "for test1",
+                                        "action": {
+                                            "open_browser": "Chrome"
+                                        }
+                                    },
+                                    {
+                                        "name": "for test2",
+                                        "action": {
+                                            "path": "https://google.com",
+                                            "find_element": "//*[@name='q']",
+                                            "send_keys": {
+                                                "value": "test"
+                                            },
+                                            "time_sleep": "2"
+                                        }
+                                    },
+                                    {
+                                        "name": "for test3",
+                                        "action": {
+                                            "find_element": "(//*[@data-frt='0'])[1]",
+                                            "click": 1
+                                        }
+                                    },
+                                    {
+                                        "name": "for test4",
+                                        "action": {
+                                            "find_element": "(//*[@name='btnK'])[2]",
+                                            "click": 1
+                                        }
+                                    }
+                    ]
+                }
+}
