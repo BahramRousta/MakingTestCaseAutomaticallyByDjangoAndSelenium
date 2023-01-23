@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from initial.models import Driver, Action, TestStep, TestCase
+from rest_framework.exceptions import ValidationError
+from initial.models import Driver, TestStep, TestCase
 
 
 class DriverSerializer(serializers.ModelSerializer):
@@ -39,6 +40,7 @@ class ActionSerializer(serializers.Serializer):
     click = serializers.BooleanField(required=False)
 
 
+
 class TestStepSerializer(serializers.ModelSerializer):
     action = ActionSerializer()
 
@@ -49,6 +51,10 @@ class TestStepSerializer(serializers.ModelSerializer):
 
 
 class TestCaseSerializer(serializers.ModelSerializer):
+    """
+    Serialize TestCase.
+    """
+
     test_steps = serializers.ListField(
         child=TestStepSerializer()
     )
@@ -57,10 +63,10 @@ class TestCaseSerializer(serializers.ModelSerializer):
         model = TestCase
         fields = ['title', 'test_steps']
 
+    def validate(self, attrs):
 
-class RunSerializer(serializers.Serializer):
-    """
-        Serialize TestCase.
-    """
-
-    test_case = TestCaseSerializer()
+        for key in self.initial_data['test_steps']:
+            for keyword, value in key['action'].items():
+                if keyword not in ActionSerializer().fields:
+                    raise ValidationError({'Error': f'In test_step "{key["name"]}", {keyword} is not a valid keyword.'})
+        return attrs
