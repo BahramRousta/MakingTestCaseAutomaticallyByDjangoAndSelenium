@@ -40,14 +40,6 @@ class TestStep(models.Model):
         return self.name
 
 
-class Element(models.Model):
-
-    path = models.CharField(max_length=250)
-
-    def __str__(self):
-        return self.path
-
-
 class Action(models.Model):
     class ChoiceAction(models.TextChoices):
         OPEN_BROWSER = 'open_browser'
