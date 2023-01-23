@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import RunCheckAPIView, AddDriverAPIView
+from .views import RunTestCaseAPIView, AddDriverAPIView
 
 urlpatterns = [
     path('add-driver/', AddDriverAPIView.as_view(), name='add-driver'),
-    path('run/', RunCheckAPIView.as_view(), name='run'),
+    path('run-test-case/', RunTestCaseAPIView.as_view(), name='run-test-case'),
 ]
