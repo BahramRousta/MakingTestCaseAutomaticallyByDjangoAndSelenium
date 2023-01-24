@@ -54,7 +54,7 @@ class TestScenarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TestScenario
-        fileds = "__all__"
+        fields = ['id']
 
 
 class TestCaseSerializer(serializers.ModelSerializer):
