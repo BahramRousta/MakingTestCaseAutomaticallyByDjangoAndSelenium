@@ -14,7 +14,7 @@ class Driver(models.Model):
         return self.name
 
 
-class TestSenario(models.Model):
+class TestScenario(models.Model):
     name = models.CharField(max_length=250)
 
     def __str__(self):
@@ -24,7 +24,7 @@ class TestSenario(models.Model):
 class TestCase(models.Model):
 
     title = models.CharField(max_length=250)
-    test_senario = models.ForeignKey(TestSenario, on_delete=models.CASCADE)
+    test_scenario = models.ForeignKey(TestScenario, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -34,7 +34,7 @@ class TestCase(models.Model):
 class TestStep(models.Model):
 
     name = models.CharField(max_length=250)
-    test_case = models.OneToOneField(TestCase, on_delete=models.CASCADE)
+    test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

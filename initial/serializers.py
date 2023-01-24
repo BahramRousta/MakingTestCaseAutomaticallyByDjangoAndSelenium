@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from initial.models import Driver, TestStep, TestCase
+from initial.models import Driver, TestStep, TestCase, TestScenario
 
 
 class DriverSerializer(serializers.ModelSerializer):
@@ -50,18 +50,25 @@ class TestStepSerializer(serializers.ModelSerializer):
         fields = ["name", "action"]
 
 
+class TestScenarioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TestScenario
+        fileds = "__all__"
+
+
 class TestCaseSerializer(serializers.ModelSerializer):
     """
     Serialize TestCase.
     """
-
+    test_scenario = TestScenarioSerializer()
     test_steps = serializers.ListField(
         child=TestStepSerializer()
     )
 
     class Meta:
         model = TestCase
-        fields = ['title', 'test_steps']
+        fields = ['test_scenario', 'title', 'test_steps']
 
     def validate(self, attrs):
 
