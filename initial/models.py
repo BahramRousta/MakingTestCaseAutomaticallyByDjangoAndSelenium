@@ -34,6 +34,7 @@ class TestCase(models.Model):
 class TestStep(models.Model):
 
     name = models.CharField(max_length=250)
+    step = models.JSONField()
     test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE)
 
     def __str__(self):
