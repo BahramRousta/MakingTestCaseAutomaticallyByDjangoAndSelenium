@@ -32,6 +32,7 @@ class RunTestCaseAPIView(APIView):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
+            serializer.save()
             data = serializer.validated_data
 
             for index in data['test_steps']:
