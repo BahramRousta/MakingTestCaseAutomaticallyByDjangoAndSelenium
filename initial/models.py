@@ -1,4 +1,3 @@
-from lib2to3.pgen2.token import BACKQUOTE
 from django.db import models
 
 
@@ -24,7 +23,7 @@ class TestScenario(models.Model):
 class TestCase(models.Model):
 
     title = models.CharField(max_length=250)
-    test_scenario = models.ForeignKey(TestScenario, on_delete=models.CASCADE)
+    test_scenario = models.ForeignKey(TestScenario, on_delete=models.CASCADE, related_name='test_cases')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -35,7 +34,7 @@ class TestStep(models.Model):
 
     name = models.CharField(max_length=250)
     step = models.JSONField()
-    test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE)
+    test_case = models.ForeignKey(TestCase, on_delete=models.CASCADE, related_name='test_steps')
 
     def __str__(self):
         return self.name

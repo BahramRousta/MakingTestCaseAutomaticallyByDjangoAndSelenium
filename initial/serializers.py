@@ -58,6 +58,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
     """
     Serialize TestCase.
     """
+
     test_scenario = serializers.IntegerField(required=True)
     test_steps = serializers.ListField(
         child=TestStepSerializer()
@@ -72,7 +73,9 @@ class TestCaseSerializer(serializers.ModelSerializer):
         for key in self.initial_data['test_steps']:
             for keyword, value in key['action'].items():
                 if keyword not in ActionSerializer().fields:
-                    raise ValidationError({'Error': f'In test_step "{key["name"]}", {keyword} is not a valid keyword.'})
+                    raise ValidationError({'Error': f'In test_step "{key["name"]}",'
+                                                    f' {keyword} is not a valid keyword.'})
+
         return attrs
 
     def validate_test_scenario(self, attr):
@@ -85,15 +88,29 @@ class TestCaseSerializer(serializers.ModelSerializer):
         return attr
 
     def create(self, validated_data):
+        """
+        Create new test case and test steps.
+        :param validated_data:
+        :return: TestCase Model Instance
+        """
+
         test_scenario_id = validated_data['test_scenario']
 
-        test_scenario = TestScenario.objects.filter(id=test_scenario_id)
+        test_scenario = TestScenario.objects.filter(id=test_scenario_id).first()
 
-        if test_scenario.exists():
-            new_test_case = TestCase.objects.create(title=validated_data['title'],
-                                                    test_scenario=test_scenario[0])
-        for step in validated_data['test_steps']:
-            TestStep.objects.create(name=step['name'],
-                                    step=step['action'],
-                                    test_case=new_test_case)
-        return new_test_case
+        if test_scenario:
+            test_case = TestCase.objects.filter(title=validated_data['title'],
+                                                test_scenario=test_scenario)
+
+            if not test_case.first():
+                new_test_case = TestCase.objects.create(test_scenario=test_scenario,
+                                                        title=validated_data['title'])
+
+                for step in validated_data['test_steps']:
+                    TestStep.objects.create(name=step['name'],
+                                            step=step['action'],
+                                            test_case=new_test_case)
+
+                return new_test_case
+            raise ValidationError({"Error": f"Test case '{validated_data['title']}' already exist."
+                                            f"For insert it you must first update it."})

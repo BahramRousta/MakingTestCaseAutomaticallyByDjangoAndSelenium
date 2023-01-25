@@ -33,11 +33,11 @@ class RunTestCaseAPIView(APIView):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            data = serializer.validated_data
+            # data = serializer.validated_data
 
-            for index in data['test_steps']:
-                resultDictionary = dict((x, y) for x, y in index['action'].items())
-                self.set_up.main(**resultDictionary)
+            # for index in data['test_steps']:
+            #     resultDictionary = dict((x, y) for x, y in index['action'].items())
+            #     self.set_up.main(**resultDictionary)
             return Response(status=200)
         else:
             return Response(status=400, data=serializer.errors)
