@@ -52,8 +52,11 @@ class TestStepSerializer(serializers.ModelSerializer):
 class TestScenarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestScenario
-        fields = ['name']
-
+        fields = ['id', 'name']
+        extra_fields = {
+            "id": {"required": "False",
+                   "read_only": "True"}
+        }
 
 class TestCaseSerializer(serializers.ModelSerializer):
     """
