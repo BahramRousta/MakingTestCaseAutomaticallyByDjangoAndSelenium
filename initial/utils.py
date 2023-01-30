@@ -2,6 +2,7 @@ from selenium import webdriver
 from .models import Driver
 import time
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 def get_driver(driver_name):
@@ -26,7 +27,7 @@ class SetUpMain:
     def main(self, **PARAMS):
 
         for key in PARAMS:
-
+            print(key)
             if key == "open_browser":
                 self.dr = get_driver(PARAMS[key])
                 
@@ -51,6 +52,11 @@ class SetUpMain:
             if key == "time_sleep":
                 time.sleep(PARAMS[key])
                 continue
+
+            if key == "close":
+                self.dr.close()
+                break
+
 
 
 
