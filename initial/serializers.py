@@ -37,6 +37,7 @@ class ActionSerializer(serializers.Serializer):
     send_keys = SendKeysSerializer(required=False)
     name = serializers.CharField(max_length=15, required=False)
     click = serializers.BooleanField(required=False)
+    close = serializers.BooleanField(required=False)
 
 
 class TestStepSerializer(serializers.ModelSerializer):
@@ -110,7 +111,6 @@ class TestCaseSerializer(serializers.ModelSerializer):
                     TestStep.objects.create(name=step['name'],
                                             step=step['action'],
                                             test_case=new_test_case)
-
                 return new_test_case
-            raise ValidationError({"Error": f"Test case '{validated_data['title']}' already exist."
-                                            f"For insert it you must first update it."})
+            raise ValidationError(f"Test case {validated_data['title']} already exists."
+                                  f" To insert it, you will need first to update it.")
