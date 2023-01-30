@@ -14,7 +14,7 @@ class Driver(models.Model):
 
 
 class TestScenario(models.Model):
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250, unique=True, null=False, blank=False, db_index=True)
 
     def __str__(self):
         return self.name
