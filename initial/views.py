@@ -1,10 +1,11 @@
 from collections import OrderedDict
 from rest_framework import status
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import DriverSerializer, TestCaseSerializer, TestScenarioSerializer
 from .utils import SetUpMain
-from .models import Driver
+from .models import Driver, TestScenario
 
 
 class AddDriverAPIView(APIView):
@@ -25,6 +26,7 @@ class AddDriverAPIView(APIView):
 
 
 class TestScenarioAPIView(APIView):
+
     serializer_class = TestScenarioSerializer
 
     def post(self, request):
@@ -34,6 +36,11 @@ class TestScenarioAPIView(APIView):
             serializer.save()
             return Response(status=status.HTTP_201_CREATED, data={'Message': 'TestScenario create successfully.'})
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetAllTestScenarioAPIView(ListAPIView):
+    queryset = TestScenario.objects.all()
+    serializer_class = TestScenarioSerializer
 
 
 class RunTestCaseAPIView(APIView):
