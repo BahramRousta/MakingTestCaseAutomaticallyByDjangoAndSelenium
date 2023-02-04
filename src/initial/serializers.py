@@ -13,18 +13,6 @@ class DriverSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class RunSerializerCore(serializers.Serializer):
-    """
-    Serialize all steps of TestCase.
-    """
-    DRIVER_NAME = serializers.CharField(required=False)
-    PATH = serializers.CharField(required=False)
-    XPATH = serializers.CharField(required=False)
-    SEND_KEYS = serializers.CharField(required=False)
-    CLICK = serializers.CharField(required=False)
-    SLEEP = serializers.IntegerField(required=False)
-
-
 class SendKeysSerializer(serializers.Serializer):
     value = serializers.CharField(max_length=100)
 
@@ -70,7 +58,11 @@ class TestCaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TestCase
-        fields = ['test_scenario', 'title', 'test_steps']
+        fields = ['id', 'test_scenario', 'title', 'test_steps']
+        extra_fields = {
+            "id": {"required": "False",
+                   "read_only": "True"}
+        }
 
     def validate(self, attrs):
 
@@ -103,17 +95,17 @@ class TestCaseSerializer(serializers.ModelSerializer):
         test_scenario = TestScenario.objects.filter(id=test_scenario_id).first()
 
         if test_scenario:
-            test_case = TestCase.objects.filter(title=validated_data['title'],
-                                                test_scenario=test_scenario)
+            # test_case = TestCase.objects.filter(title=validated_data['title'],
+            #                                     test_scenario=test_scenario)
 
-            if not test_case.first():
-                new_test_case = TestCase.objects.create(test_scenario=test_scenario,
-                                                        title=validated_data['title'])
+            # if not test_case.first():
+            new_test_case = TestCase.objects.create(test_scenario=test_scenario,
+                                                    title=validated_data['title'])
 
-                for step in validated_data['test_steps']:
-                    TestStep.objects.create(name=step['name'],
-                                            step=step['action'],
-                                            test_case=new_test_case)
-                return new_test_case
-            raise ValidationError(f"Test case {validated_data['title']} already exists."
-                                  f" To insert it, you will need first to update it.")
+            for step in validated_data['test_steps']:
+                TestStep.objects.create(name=step['name'],
+                                        step=step['action'],
+                                        test_case=new_test_case)
+            return new_test_case
+            # raise ValidationError(f"Test case {validated_data['title']} already exists."
+            #                       f" To insert it, you will need first to update it.")

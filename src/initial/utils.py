@@ -2,7 +2,6 @@ from selenium import webdriver
 from .models import Driver
 import time
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 
 
 def get_driver(driver_name):
@@ -57,7 +56,8 @@ class SetUpMain:
                 self.dr.close()
                 break
 
-
-
+            # self.dr.find_element(By.XPATH, '//div[@id="result-stats" and contains(text(), "results")]')
+            element = self.dr.find_element(By.XPATH, '//div[@id="result-stats" and contains(text(), "results")]')
+            assert (element.text, )
 
 

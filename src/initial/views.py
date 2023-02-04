@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import DriverSerializer, TestCaseSerializer, TestScenarioSerializer
 from .utils import SetUpMain
-from .models import Driver, TestScenario
+from .models import Driver, TestScenario, TestStep
 
 
 class AddDriverAPIView(APIView):
@@ -34,7 +34,7 @@ class TestScenarioAPIView(APIView):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED, data={'Message': 'TestScenario create successfully.'})
+            return Response(status=status.HTTP_201_CREATED, data=serializer.data)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -59,7 +59,9 @@ class RunTestCaseAPIView(APIView):
                 resultDictionary = OrderedDict((x, y) for x, y in index['action'].items())
 
                 self.set_up.main(**resultDictionary)
-
             return Response(status=200)
         else:
             return Response(status=400, data=serializer.errors)
+
+
+
