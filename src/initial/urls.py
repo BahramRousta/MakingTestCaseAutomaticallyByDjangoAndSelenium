@@ -12,4 +12,5 @@ urlpatterns = [
     path('get_test_scenario/', GetAllTestScenarioAPIView.as_view(), name='get_test_scenario'),
     path('run-test-case/', RunTestCaseAPIView.as_view(), name='run-test-case'),
     path('update-test-case/<int:id>/', RunTestCaseAPIView.as_view(), name='update-test-case'),
+    path('get-test-case/<int:id>/', RunTestCaseAPIView.as_view(), name='get-test-case'),
 ]
