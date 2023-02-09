@@ -46,6 +46,7 @@ class TestScenarioSerializer(serializers.ModelSerializer):
                    "read_only": "True"}
         }
 
+
 class TestCaseSerializer(serializers.ModelSerializer):
     """
     Serialize TestCase.
@@ -67,10 +68,11 @@ class TestCaseSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
 
         for key in self.initial_data['test_steps']:
-            for keyword, value in key['action'].items():
-                if keyword not in ActionSerializer().fields:
-                    raise ValidationError({'Error': f'In test_step "{key["name"]}",'
-                                                    f' {keyword} is not a valid keyword.'})
+            for k, v in key['action'].items():
+                if k not in ActionSerializer().fields:
+                    raise ValidationError(
+                        {'Message': f'In test_step "{key["name"]}",{k} is not a valid keyword.'}
+                    )
 
         return attrs
 
@@ -80,7 +82,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
         test_scenario = TestScenario.objects.filter(id=test_scenario_id)
 
         if not test_scenario.exists():
-            raise ValidationError({'Error': 'Test scenario in not exist.'})
+            raise ValidationError({'Message': 'Test scenario in not exist.'})
         return attr
 
     def create(self, validated_data):
@@ -95,17 +97,30 @@ class TestCaseSerializer(serializers.ModelSerializer):
         test_scenario = TestScenario.objects.filter(id=test_scenario_id).first()
 
         if test_scenario:
-            # test_case = TestCase.objects.filter(title=validated_data['title'],
-            #                                     test_scenario=test_scenario)
+            test_case = TestCase.objects.filter(title=validated_data['title'],
+                                                test_scenario=test_scenario)
 
-            # if not test_case.first():
-            new_test_case = TestCase.objects.create(test_scenario=test_scenario,
-                                                    title=validated_data['title'])
+            if not test_case.first():
+                new_test_case = TestCase.objects.create(test_scenario=test_scenario,
+                                                        title=validated_data['title'])
 
-            for step in validated_data['test_steps']:
+                for step in validated_data['test_steps']:
+                    TestStep.objects.create(name=step['name'],
+                                            step=step['action'],
+                                            test_case=new_test_case)
+                return new_test_case
+            raise ValidationError(f"Message: Test case {validated_data['title']} already exists.")
+
+    def update(self, instance, validated_data):
+
+        for step in validated_data['test_steps']:
+            test_step = TestStep.objects.filter(name=step['name'],
+                                                test_case=instance).first()
+            if test_step:
+                test_step.step = step['action']
+                test_step.save()
+            else:
                 TestStep.objects.create(name=step['name'],
                                         step=step['action'],
-                                        test_case=new_test_case)
-            return new_test_case
-            # raise ValidationError(f"Test case {validated_data['title']} already exists."
-            #                       f" To insert it, you will need first to update it.")
+                                        test_case=instance)
+        return instance
