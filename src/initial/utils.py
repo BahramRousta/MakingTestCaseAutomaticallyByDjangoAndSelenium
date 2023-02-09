@@ -39,9 +39,9 @@ class SetUpMain:
                 continue
 
             if key == "send_keys":
-                for item, it in PARAMS[key].items():
-                    self.element.send_keys(it)
-                    time.sleep(3)
+                for k, v in PARAMS[key].items():
+                    self.element.send_keys(v)
+                    # time.sleep(3)
                 continue
 
             if key == "click":
@@ -55,9 +55,5 @@ class SetUpMain:
             if key == "close":
                 self.dr.close()
                 break
-
-            # self.dr.find_element(By.XPATH, '//div[@id="result-stats" and contains(text(), "results")]')
-            element = self.dr.find_element(By.XPATH, '//div[@id="result-stats" and contains(text(), "results")]')
-            assert (element.text, )
 
 

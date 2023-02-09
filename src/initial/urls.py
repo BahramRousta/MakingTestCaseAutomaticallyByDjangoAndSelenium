@@ -3,7 +3,7 @@ from .views import (
     RunTestCaseAPIView,
     AddDriverAPIView,
     TestScenarioAPIView,
-    GetAllTestScenarioAPIView
+    GetAllTestScenarioAPIView,
 )
 
 urlpatterns = [
@@ -11,4 +11,5 @@ urlpatterns = [
     path('create_test_scenario/', TestScenarioAPIView.as_view(), name='create_test_scenario'),
     path('get_test_scenario/', GetAllTestScenarioAPIView.as_view(), name='get_test_scenario'),
     path('run-test-case/', RunTestCaseAPIView.as_view(), name='run-test-case'),
+    path('update-test-case/<int:id>/', RunTestCaseAPIView.as_view(), name='update-test-case'),
 ]
