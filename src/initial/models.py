@@ -42,6 +42,7 @@ class TestCase(models.Model):
 class TestStep(models.Model):
     name = models.CharField(max_length=250)
     step = models.JSONField()
+    row_number = models.PositiveBigIntegerField()
     test_case = models.ForeignKey(
         TestCase,
         on_delete=models.CASCADE,
