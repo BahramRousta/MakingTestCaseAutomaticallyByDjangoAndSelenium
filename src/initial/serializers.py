@@ -26,7 +26,7 @@ class ActionSerializer(serializers.Serializer):
     Serialize Selenium action and Keywords to send from TestCases.
     """
 
-    open_browser = serializers.CharField(required=False)
+    web_driver = serializers.CharField(required=False)
     path = serializers.CharField(max_length=250, required=False)
     find_element = serializers.CharField(required=False)
     time_sleep = serializers.IntegerField(required=False)

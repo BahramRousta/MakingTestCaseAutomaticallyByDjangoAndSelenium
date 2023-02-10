@@ -1,0 +1,41 @@
+{   "test_scenario": "1",
+    "title": "google-search",
+    "test_steps": [
+            {
+                "row_number": 1,
+                "name": "step 1",
+                "action": {
+                    "web_driver": "Chrome"
+                }
+            },
+            {
+                "row_number": 2,
+                "name": "step 2",
+                "action": {
+                    "path": "https://google.com",
+                    "find_element": "//*[@name='q']",
+                    "send_keys": {
+                        "value": "test"
+                    },
+                    "time_sleep": 1
+                }
+            },
+            {
+                "row_number": 3,
+                "name": "step 3",
+                "action": {
+                    "find_element": "(//*[@data-frt='0'])[1]",
+                    "click": 1
+                }
+            },
+            {
+                "row_number": 4,
+                "name": "step 4",
+                "action": {
+                    "find_element": "(//*[@name='btnK'])[2]",
+                    "click": 1,
+                    "close": 1
+                }
+            }
+        ]
+}
