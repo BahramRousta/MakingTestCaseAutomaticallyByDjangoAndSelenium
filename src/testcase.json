@@ -1,6 +1,7 @@
 {
     "test_case": {
-                    "title": "farzan",
+                    "test_scenario": "sampleTestScenario",
+                    "title": "sample",
                     "test_steps": [
                                     {
                                         "name": "for test1",
@@ -30,7 +31,9 @@
                                         "name": "for test4",
                                         "action": {
                                             "find_element": "(//*[@name='btnK'])[2]",
-                                            "click": 1
+                                            "click": 1,
+                                            "time_sleep": "2",
+                                            "close": 1
                                         }
                                     }
                     ]

@@ -9,9 +9,9 @@ services:
       sh -c "python3 manage.py makemigrations --noinput && \
                  python3 manage.py migrate --noinput && \
                  python3 manage.py collectstatic --noinput && \
-                 python3 manage.py createsuperuser --user superuser --email admin@localhost --noinput; \
-                 python3 manage.py runserver 0.0.0.0:8000"
+                 python3 manage.py createsuperuser --username superuser --email admin@localhost --noinput; \
+                 python3 manage.py runserver 0.0.0.0:8001"
     ports:
-      - 8000:8000
+      - 8001:8001
     volumes:
       - ./src:/src

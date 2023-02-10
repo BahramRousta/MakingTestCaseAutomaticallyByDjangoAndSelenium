@@ -2,7 +2,6 @@ from selenium import webdriver
 from .models import Driver
 import time
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 
 
 def get_driver(driver_name):
@@ -40,9 +39,9 @@ class SetUpMain:
                 continue
 
             if key == "send_keys":
-                for item, it in PARAMS[key].items():
-                    self.element.send_keys(it)
-                    time.sleep(3)
+                for k, v in PARAMS[key].items():
+                    self.element.send_keys(v)
+                    # time.sleep(3)
                 continue
 
             if key == "click":
@@ -56,8 +55,5 @@ class SetUpMain:
             if key == "close":
                 self.dr.close()
                 break
-
-
-
 
 
