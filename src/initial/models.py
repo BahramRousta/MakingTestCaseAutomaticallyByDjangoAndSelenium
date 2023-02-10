@@ -51,20 +51,3 @@ class TestStep(models.Model):
 
     def __str__(self):
         return self.name
-
-
-# class Action(models.Model):
-#     class ChoiceAction(models.TextChoices):
-#         OPEN_BROWSER = 'open_browser'
-#         CLICK = 'click'
-#         MOVE_TO_ELEMENT = 'move_to_element'
-#         FIND_ELEMENT = 'find_element'
-#         SEND_KEYS = 'send_keys'
-#         CLOSE = 'close'
-#         BACK = 'back'
-#         REFRESH = 'refresh'
-#
-#     name = models.CharField(max_length=25, choices=ChoiceAction.choices)
-#
-#     def __str__(self):
-#         return self.name

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'initial.apps.InitialConfig',
     'selenium',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

@@ -6,7 +6,7 @@ from initial.models import Driver, TestStep, TestCase, TestScenario
 
 class DriverSerializer(serializers.ModelSerializer):
     """
-    Serialize Driver model.
+    Serialize WebDriver model.
     """
 
     class Meta:
@@ -15,10 +15,17 @@ class DriverSerializer(serializers.ModelSerializer):
 
 
 class SendKeysSerializer(serializers.Serializer):
+    """
+    Serialize SendKeys value.
+    """
     value = serializers.CharField(max_length=100)
 
 
 class ActionSerializer(serializers.Serializer):
+    """
+    Serialize Selenium action and Keywords to send from TestCases.
+    """
+
     open_browser = serializers.CharField(required=False)
     path = serializers.CharField(max_length=250, required=False)
     find_element = serializers.CharField(required=False)
@@ -30,6 +37,9 @@ class ActionSerializer(serializers.Serializer):
 
 
 class TestStepSerializer(serializers.ModelSerializer):
+    """
+    Serialize TestSteps that senf from TestCase.
+    """
     action = ActionSerializer()
 
     class Meta:
@@ -39,6 +49,9 @@ class TestStepSerializer(serializers.ModelSerializer):
 
 
 class TestScenarioSerializer(serializers.ModelSerializer):
+    """
+    Serialize TestScenario.
+    """
     class Meta:
         model = TestScenario
         fields = ['id', 'name']
@@ -69,6 +82,11 @@ class TestCaseSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, attrs):
+        """
+        If the sent keywords are not serializer fields and Also if the row number and steps name
+        has duplicates return ValidationError.
+        """
+
         data = self.initial_data['test_steps']
         for key in data:
             for k, v in key['action'].items():
@@ -105,9 +123,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """
-        Create new test case and test steps.
-        :param validated_data:
-        :return: TestCase Model Instance
+        Create new test case and save test steps.
         """
 
         test_scenario_id = validated_data['test_scenario']
@@ -129,13 +145,18 @@ class TestCaseSerializer(serializers.ModelSerializer):
                                             test_case=new_test_case)
                 return new_test_case
             else:
+                test_step = None
                 for step in validated_data['test_steps']:
 
-                    test_step = TestStep.objects.filter(row_number=step['row_number'],
+                    test_step = TestStep.objects.filter(Q(row_number=step['row_number']) | Q(name=step['name']),
                                                         test_case=test_case.first()).first()
 
-                    if test_step:
+                    if test_step and test_step.row_number == step['row_number']:
                         test_step.name = step['name']
+                        test_step.step = step['action']
+                        test_step.save()
+                    elif test_step and test_step.name == step['name']:
+                        test_step.row_number = step['row_number']
                         test_step.step = step['action']
                         test_step.save()
                     else:
@@ -144,23 +165,22 @@ class TestCaseSerializer(serializers.ModelSerializer):
                                                             step=step['action'],
                                                             test_case=test_case.first())
                 return test_step
-            # raise ValidationError(f"Message: Test case {validated_data['title']} already exists.")
 
-    def update(self, instance, validated_data):
-
-        for step in validated_data['test_steps']:
-            test_step = TestStep.objects.filter(name=step['name'],
-                                                row_number=step['row_number'],
-                                                test_case=instance).first()
-            if test_step:
-                test_step.step = step['action']
-                test_step.save()
-            else:
-                TestStep.objects.create(row_number=step['row_number'],
-                                        name=step['name'],
-                                        step=step['action'],
-                                        test_case=instance)
-        return instance
+    # def update(self, instance, validated_data):
+    #
+    #     for step in validated_data['test_steps']:
+    #         test_step = TestStep.objects.filter(name=step['name'],
+    #                                             row_number=step['row_number'],
+    #                                             test_case=instance).first()
+    #         if test_step:
+    #             test_step.step = step['action']
+    #             test_step.save()
+    #         else:
+    #             TestStep.objects.create(row_number=step['row_number'],
+    #                                     name=step['name'],
+    #                                     step=step['action'],
+    #                                     test_case=instance)
+    #     return instance
 
 
 class GetTestCase(serializers.ModelSerializer):
